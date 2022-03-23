@@ -3,10 +3,6 @@
   <component name="NewModuleRootManager">
     <orderEntry type="jdk" jdkName="Python 3.8 (base)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="dsProject" />
-    <orderEntry type="module" module-name="ProjektMessHeiz" />
-    <orderEntry type="module" module-name="MessHeizProject" />
     <orderEntry type="module" module-name="Messung_Heizung" />
-    <orderEntry type="module" module-name="mhProject" />
   </component>
 </module>
