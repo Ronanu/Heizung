@@ -1,6 +1,8 @@
 import csv
 import re
 from datetime import datetime
+import statistics
+import numpy as np
 
 MonthDict = {
     1: ["January", 31],
@@ -34,7 +36,7 @@ class DayCounter:
             nday = 1
             nmonth = self.month + 1
             nyear = self.year
-            if nmonth == 13:
+            if nmonth == max_months + 1:
                 nmonth = 1
                 nyear = self.year + 1
         else:
@@ -46,7 +48,7 @@ class DayCounter:
         return nyear, nmonth, nday
 
     def get_date_diff(self, date: list):
-        for i in range(2000):
+        for i in range(3000):
             next_date = self.get_date_increment()
             if all(date[j] == next_date[j] for j in range(3)):
                 return i + 1
@@ -54,6 +56,9 @@ class DayCounter:
 
 
 class InPackage:
+    data = None
+    data_median = None
+
     def __init__(self, filename='feeds.csv', splitter='-|:|,|T'):
         self.filename = filename
         self.splitter = splitter
@@ -110,7 +115,29 @@ class InPackage:
 
                 except:
                     pass
+        self.data = data
         return data
+
+    def median_missing_links(self):
+        years = sorted(self.data.keys())
+        months = sorted(MonthDict.keys())
+        data_median = {m: {d: 0. for d in range(MonthDict[m][1])} for m in months}
+
+        for m in months:
+            for d in range(MonthDict[m][1]):
+                daydata = []
+                for y in years:
+                    try:
+                        daytime = self.data[y][m][d+1]['t']
+                        if not daytime == 0.:
+                            daydata.append(daytime)
+                    except:
+                        pass
+                if bool(daydata):
+                    data_median[m][d] = statistics.median(daydata)
+        self.data_median = data_median
+        return data_median
+
 
 
 if __name__ == '__main__':
@@ -120,5 +147,6 @@ if __name__ == '__main__':
 
     inpt = InPackage()
     data = inpt.read_and_split()
+    data_median = inpt.median_missing_links()
     print(data)
 
