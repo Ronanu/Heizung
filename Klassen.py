@@ -45,7 +45,12 @@ class DayCounter:
         self.year, self.month, self.day = nyear, nmonth, nday
         return nyear, nmonth, nday
 
-
+    def get_date_diff(self, date: list):
+        for i in range(2000):
+            next_date = self.get_date_increment()
+            if all(date[j] == next_date[j] for j in range(3)):
+                return i + 1
+        raise IOError('date_diff not found')
 
 
 class InPackage:
@@ -109,10 +114,9 @@ class InPackage:
 
 
 if __name__ == '__main__':
-    y, m, d = 1995, 12, 30
+    y, m, d = 2018, 12, 30
     inpt = DayCounter(y=y, m=m, d=d)
-    for i in range(400):
-        print(inpt.get_date_increment())
 
-    _in = InPackage()
-    _in.read_and_split()
+    diff = inpt.get_date_diff([2019, 4, 6])
+    print(diff)
+
