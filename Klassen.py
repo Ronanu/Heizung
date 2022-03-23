@@ -58,6 +58,8 @@ class DayCounter:
 class InPackage:
     data = None
     data_median = None
+    stream = None
+    stream_median = None
 
     def __init__(self, filename='feeds.csv', splitter='-|:|,|T'):
         self.filename = filename
@@ -116,7 +118,6 @@ class InPackage:
                 except:
                     pass
         self.data = data
-        return data
 
     def median_missing_links(self):
         years = sorted(self.data.keys())
@@ -136,7 +137,29 @@ class InPackage:
                 if bool(daydata):
                     data_median[m][d] = statistics.median(daydata)
         self.data_median = data_median
-        return data_median
+
+    def get_data(self):
+        if self.data is None:
+            self.read_and_split()
+        return self.data
+
+    def get_data_median(self):
+        if self.data is None:
+            self.read_and_split()
+        if self.data_median is None:
+            self.median_missing_links()
+        return self.data_median
+
+    def get_data_median_stream(self):
+        dm = self.get_data_median()
+        stream = []
+        for m in sorted(dm.keys()):
+            for d in sorted(dm[m].keys()):
+                date = [m, d]
+                m_time = dm[m][d]
+                stream.append([m_time, date])
+        self.stream_median = stream
+        return stream
 
 
 
@@ -147,6 +170,6 @@ if __name__ == '__main__':
 
     inpt = InPackage()
     data = inpt.read_and_split()
-    data_median = inpt.median_missing_links()
+    data_median = inpt.get_data_median_stream()
     print(data)
 
