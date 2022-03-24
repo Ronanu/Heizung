@@ -162,7 +162,6 @@ class InPackage:
         return stream
 
 
-
 if __name__ == '__main__':
     y, m, d = 2018, 12, 30
     inpt = DayCounter(y=y, m=m, d=d)
